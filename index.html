@@ -1,0 +1,1256 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memes 2.0 Citizenship</title>
+    <link rel="shortcut icon" href="images/fav.png" type="image/png">
+    <style>
+        /* Глобальные стили - первый разработчик */
+        @font-face {
+            font-family: 'Impact';
+            src: url('https://fonts.cdnfonts.com/css/impact') format('woff2');
+        }
+
+        /* Стикеры на заднем фоне - первый разработчик */
+        .meme-sticker {
+            position: fixed;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.5;
+            animation: float 15s linear infinite;
+            image-rendering: pixelated;
+            filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.3));
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(50px, -20px) rotate(10deg); }
+            50% { transform: translate(100px, 0) rotate(0deg); }
+            75% { transform: translate(50px, 20px) rotate(-10deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f0f0f0;
+            font-family: 'Arial', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-image: 
+                url('images/removed.png'),
+                url('images/removed.png');
+            background-repeat: no-repeat;
+            background-position: left top, right bottom;
+            background-size: 150px;
+            background-attachment: fixed;
+        }
+
+        /* Шапка - второй разработчик */
+        header {
+            width: 100%;
+            padding: 15px 20px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.85);
+            border-bottom: 4px double #000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-size: 3.2rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 8px;
+            color: #000;
+            font-family: 'Impact', sans-serif;
+            transform: rotate(-1deg);
+            text-shadow: 3px 3px 0 rgba(0,0,0,0.1);
+            padding: 5px 15px;
+            display: inline-block;
+            border: 3px solid #000;
+            background: rgba(255,255,255,0.7);
+        }
+
+        /* Бегущая строка - первый разработчик */
+        .marquee {
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            background: linear-gradient(90deg, #000, #333);
+            padding: 12px 0;
+            position: relative;
+        }
+
+        .marquee span {
+            display: inline-block;
+            padding-left: 100%;
+            animation: marquee 12s linear infinite;
+            font-size: 1.1rem;
+            color: #fff;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        @keyframes marquee {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-100%, 0); }
+        }
+
+        /* Основной контент - второй разработчик */
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 25px;
+            position: relative;
+            background-color: rgba(255,255,255,0.6);
+            border-top: 1px solid rgba(0,0,0,0.1);
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        /* Кнопки - первый разработчик */
+        .btn {
+            background: #000;
+            color: #fff;
+            border: 3px solid #000;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            z-index: 200;
+            transition: all 0.25s ease-out;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-family: 'Impact', sans-serif;
+            margin: 12px;
+            transform: skew(-3deg);
+            border-radius: 0;
+            box-shadow: 5px 5px 0 rgba(0,0,0,0.2);
+        }
+
+        .btn:hover {
+            background: #fff;
+            color: #000;
+            transform: skew(-3deg) scale(1.03);
+            box-shadow: 7px 7px 0 rgba(0,0,0,0.2);
+        }
+
+        .btn:active {
+            transform: skew(-3deg) scale(0.98);
+            box-shadow: 3px 3px 0 rgba(0,0,0,0.2);
+        }
+
+        /* Форма ввода - второй разработчик */
+        .input-form {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 35px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 35px;
+            border-radius: 5px;
+            border: 2px solid #000;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.15);
+            max-width: 420px;
+            width: 90%;
+        }
+
+        .input-form.active {
+            display: flex;
+            animation: wobble 0.4s;
+        }
+
+        @keyframes wobble {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(0.5deg); }
+            50% { transform: rotate(-0.5deg); }
+            75% { transform: rotate(0.5deg); }
+        }
+
+        .input-form input {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid #000;
+            color: #000;
+            font-size: 1.15rem;
+            padding: 10px 5px;
+            text-align: center;
+            outline: none;
+            font-family: 'Arial', sans-serif;
+            width: 100%;
+            letter-spacing: 1px;
+        }
+
+        .input-form input:focus {
+            border-bottom-color: #555;
+        }
+
+        /* Карточка ID - первый разработчик */
+        .id-card {
+            display: none;
+            width: 460px;
+            max-width: 90%;
+            background: linear-gradient(145deg, #e5e5e5, #f5f5f5);
+            border-radius: 12px;
+            padding: 0;
+            margin: 30px 0;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+            font-family: 'Arial', sans-serif;
+            border: 2px solid #000;
+        }
+
+        .all-licenses .id-card {
+            display: block;
+        }
+        
+        .id-card.active {
+            display: block;
+        }
+
+        .id-header {
+            background: #000;
+            color: white;
+            padding: 16px;
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: bold;
+            letter-spacing: 1.5px;
+            border-bottom: 2px solid #fff;
+            text-transform: uppercase;
+        }
+
+        .id-body {
+            display: flex;
+            padding: 22px;
+            position: relative;
+            background-color: #fafafa;
+        }
+
+        .id-photo {
+            width: 125px;
+            height: 155px;
+            border: 2px solid #333;
+            margin-right: 22px;
+            background-color: #eee;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .id-photo img {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+        }
+
+        .id-info {
+            flex: 1;
+        }
+
+        .id-row {
+            display: flex;
+            margin-bottom: 10px;
+            font-size: 0.92rem;
+            line-height: 1.4;
+        }
+
+        .id-label {
+            font-weight: bold;
+            width: 105px;
+            color: #444;
+            flex-shrink: 0;
+        }
+
+        .id-value {
+            flex: 1;
+            color: #222;
+            word-break: break-word;
+        }
+
+        .id-number {
+            margin-top: 18px;
+            padding-top: 12px;
+            border-top: 2px dashed #333;
+            font-weight: bold;
+            text-align: center;
+            letter-spacing: 1.5px;
+            font-size: 1.05rem;
+            color: #000;
+            background-color: #f0f0f0;
+            padding-bottom: 12px;
+        }
+
+        .id-footer {
+            background: #000;
+            color: white;
+            padding: 12px;
+            text-align: center;
+            font-size: 0.75rem;
+            border-top: 2px solid #fff;
+            letter-spacing: 0.5px;
+        }
+
+        .watermark {
+            position: absolute;
+            bottom: 25px;
+            right: 25px;
+            font-size: 2.8rem;
+            color: rgba(0, 0, 0, 0.08);
+            font-weight: bold;
+            pointer-events: none;
+            user-select: none;
+            transform: rotate(-15deg);
+        }
+
+        /* Кнопки действий - второй разработчик */
+        .action-buttons {
+            display: none;
+            gap: 18px;
+            margin-top: 25px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Социальные ссылки - первый разработчик */
+        .social-links {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            display: flex;
+            gap: 18px;
+            z-index: 100;
+        }
+
+        .social-link {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: #000;
+            border: 2px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.4rem;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-family: 'Impact', sans-serif;
+            box-shadow: 3px 3px 0 rgba(0,0,0,0.2);
+        }
+
+        .social-link:hover {
+            transform: scale(1.08) rotate(5deg);
+            background: #fff;
+            color: #000;
+            box-shadow: 5px 5px 0 rgba(0,0,0,0.2);
+        }
+
+        /* Кнопка всех лицензий - второй разработчик */
+        .all-licenses-btn {
+            position: fixed;
+            bottom: 25px;
+            left: 25px;
+            z-index: 100;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 1rem;
+        }
+
+        /* Секция всех лицензий - первый разработчик */
+        .all-licenses {
+            display: none;
+            width: 100%;
+            max-width: 1200px;
+            padding: 25px;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
+            background-color: rgba(255,255,255,0.7);
+        }
+
+        .all-licenses.active {
+            display: flex;
+        }
+
+        .id-card-small {
+            width: 300px;
+            background: linear-gradient(135deg, #e8e8e8, #f8f8f8);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+            transition: all 0.25s;
+            cursor: pointer;
+            border: 2px solid #000;
+        }
+
+        .id-card-small:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
+        }
+
+        .id-card-small .id-photo {
+            width: 85px;
+            height: 105px;
+            margin: 12px;
+        }
+
+        .id-card-small .id-body {
+            padding: 12px;
+        }
+
+        .id-card-small .id-row {
+            font-size: 0.82rem;
+            margin-bottom: 6px;
+        }
+
+        /* Модальное окно - второй разработчик */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(3px);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 0;
+            border-radius: 12px;
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+            animation: modalAppear 0.35s;
+            width: 460px;
+            border: 3px solid #000;
+        }
+
+        @keyframes modalAppear {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            font-size: 1.3rem;
+            cursor: pointer;
+            background: #000;
+            color: #fff;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            z-index: 1001;
+            border: 1px solid #fff;
+        }
+
+        body {
+            background-image: url("images/BACK.jpg");
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
+
+        /* Главная страница - второй разработчик */
+        .main-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            padding: 20px 0;
+        }
+
+        .main-page.active {
+            display: flex;
+        }
+
+        /* Дополнительные стили для контраста между разработчиками */
+        /* Элементы первого разработчика */
+        header, .marquee, .btn, .id-card, .social-links, .all-licenses {
+            /* Стиль первого разработчика: более угловатый, резкие тени */
+            border-radius: 0;
+            /* box-shadow: 5px 5px 0 rgba(0,0,0,0.2); */
+        }
+
+        /* Элементы второго разработчика */
+        .input-form, .action-buttons, .modal, .main-page {
+            /* Стиль второго разработчика: немного скругленные углы, мягкие тени */
+            border-radius: 5px;
+            box-shadow: 3px 3px 8px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Шапка -->
+    <header>
+        <h1>Memes 2.0 Citizenship</h1>
+    </header>
+    
+    <!-- Бегущая строка -->
+    <div class="marquee">
+        <span>$MCZ $MCZ $MCZ $MCZ $MCZ $MCZ $MCZ $MCZ $MCZ $MCZ $MCZ $MCZ $MCZ $MCZ $MCZ $MCZ $MCZ $MCZ $MCZ $MCZ $MCZ $MCZ $MCZ $MCZ $MCZ $MCZ $MCZ $MCZ $MCZ $MCZ </span>
+    </div>
+    
+    <!-- Основной контент -->
+    <main>
+        <!-- Главная страница -->
+        <div class="main-page active" id="main-page">
+            <!-- Кнопка Generate -->
+            <button id="mint-btn" class="btn">GENERATE LICENSE</button>
+            
+            <!-- Форма ввода -->
+            <div class="input-form" id="input-form">
+                <input type="text" id="username" placeholder="YOUR NAME" required="">
+                <input type="text" id="birthplace" placeholder="BIRTHPLACE" required="">
+                <button id="generate-btn" class="btn">GENERATE LICENSE</button>
+            </div>
+            
+            <!-- Карточка ID -->
+            <div class="id-card" id="id-card">
+                <div class="id-header">
+                    Memes 2.0 Citizenship
+                </div>
+                <div class="id-body">
+                    <div class="id-photo" id="id-photo">
+                        <!-- Здесь будет изображение -->
+                    </div>
+                    <div class="id-info">
+                        <div class="id-row">
+                            <div class="id-label">NAME:</div>
+                            <div class="id-value" id="id-name">-</div>
+                        </div>
+                        <div class="id-row">
+                            <div class="id-label">TYPE:</div>
+                            <div class="id-value" id="id-type">-</div>
+                        </div>
+                        <div class="id-row">
+                            <div class="id-label">ISSUED:</div>
+                            <div class="id-value" id="id-issued">-</div>
+                        </div>
+                        <div class="id-row">
+                            <div class="id-label">EXPIRES ON:</div>
+                            <div class="id-value" id="id-expires">-</div>
+                        </div>
+                        <div class="id-row">
+                            <div class="id-label">BIRTHPLACE:</div>
+                            <div class="id-value" id="id-birthplace">-</div>
+                        </div>
+                    </div>
+                    <div class="watermark" id="id-watermark">MEMES</div>
+                </div>
+                <div class="id-number" id="id-number">
+                    MEMES №: -
+                </div>
+                <div class="id-footer">
+                    OFFICIAL MEMES CERTIFICATION © MEME INC.
+                </div>
+            </div>
+            
+            <!-- Кнопки действий -->
+            <div class="action-buttons" id="action-buttons">
+                <button id="save-btn" class="btn">SAVE</button>
+                <button id="new-btn" class="btn">NEW</button>
+                <button class="btn" onclick="shareOnTwitter()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75zm-.86 13.028h1.36L4.323 2.145H2.865l8.875 11.633z"></path>
+                    </svg>
+                    Share on X
+                </button>
+            </div>
+        </div>
+        
+        <!-- Секция всех лицензий -->
+        <div class="all-licenses" id="all-licenses">
+            <!-- Лицензии будут добавлены через JS -->
+        </div>
+    </main>
+    
+    <!-- Социальные ссылки -->
+    <div class="social-links">
+        <a href="https://x.com/memescitizensh" class="social-link">X</a>
+        <a href="#" class="social-link">TG</a>
+    </div>
+    
+    <!-- Кнопка всех лицензий -->
+    <button class="btn all-licenses-btn" id="show-all-btn">ALL ID CARDS</button>
+    <button class="btn all-licenses-btn" id="back-btn" style="display: none;">BACK</button>
+    
+    <!-- Модальное окно -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-modal">X</span>
+            <div id="modal-id-content">
+                <!-- Содержимое ID будет добавлено через JS -->
+            </div>
+        </div>
+    </div>
+    <script src="js/html2canvas.min.js"></script>
+    <script>
+        // [Остальной JavaScript код остается без изменений...]
+        // Данные мемов
+        const memeTypes = [
+            { 
+                name: "TROLL FACE", 
+                image: "1.webp",
+                status: "OFFICIAL INTERNET TROLL"
+            },
+            { 
+                name: "OKEY", 
+                image: "3.png",
+                status: "PROFESSIONAL POKER PLAYER"
+            },
+            { 
+                name: "RAGE FACE", 
+                image: "6.jpg",
+                status: "CERTIFIED RAGE MASTER"
+            },
+            { 
+                name: "FOREVER ALONE", 
+                image: "5.jpg",
+                status: "LIFETIME LONER LICENSE"
+            },
+            { 
+                name: "YAO MING", 
+                image: "10.png",
+                status: "OFFICIAL LAUGHING MASTER"
+            },
+            { 
+                name: "DERP", 
+                image: "derp.png",
+                status: "CERTIFIED DERP SPECIALIST"
+            },
+            { 
+                name: "ME GUSTA", 
+                image: "4.webp",
+                status: "PROFESSIONAL CREEPER"
+            },
+            { 
+                name: "POKER FACE", 
+                image: "7.webp",
+                status: "OFFICIAL COOLNESS"
+            },
+            { 
+                name: "FUCK YEA", 
+                image: "9.WEBP",
+                status: "PROFESSIONAL COMPLAINER"
+            }
+        ];
+
+        // DOM элементы
+        const mintBtn = document.getElementById('mint-btn');
+        const inputForm = document.getElementById('input-form');
+        const generateBtn = document.getElementById('generate-btn');
+        const idCard = document.getElementById('id-card');
+        const actionButtons = document.getElementById('action-buttons');
+        const saveBtn = document.getElementById('generate-btn');
+        const newBtn = document.getElementById('new-btn');
+        const showAllBtn = document.getElementById('show-all-btn');
+        const backBtn = document.getElementById('back-btn');
+        const allLicensesSection = document.getElementById('all-licenses');
+        const mainPage = document.getElementById('main-page');
+        const modal = document.getElementById('modal');
+        const closeModal = document.getElementById('close-modal');
+        const modalContent = document.getElementById('modal-id-content');
+        
+        const usernameInput = document.getElementById('username');
+        const birthplaceInput = document.getElementById('birthplace');
+        const idName = document.getElementById('id-name');
+        const idIssued = document.getElementById('id-issued');
+        const idExpires = document.getElementById('id-expires');
+        const idBirthplace = document.getElementById('id-birthplace');
+        const idwatermark = document.getElementById('id-watermark');
+        const idNumber = document.getElementById('id-number');
+        const idPhoto = document.getElementById('id-photo');
+        const idtype = document.getElementById('id-type')
+
+        // Показать форму ввода
+        mintBtn.addEventListener('click', function() {
+            mintBtn.style.display = 'none';
+            inputForm.classList.add('active');
+        });
+
+        // Генерация ID карты
+        generateBtn.addEventListener('click', function() {
+            if (!usernameInput.value || !birthplaceInput.value) {
+                alert('PLEASE FILL ALL FIELDS!');
+                return;
+            }
+
+            // Случайный мем
+            const randomMeme = memeTypes[Math.floor(Math.random() * memeTypes.length)];
+            
+            // Обновление карточки
+            updateIdCard(randomMeme, usernameInput.value, birthplaceInput.value);
+            
+            // Показываем карточку и кнопки действий
+            inputForm.classList.remove('active');
+            idCard.classList.add('active');
+            actionButtons.style.display = 'flex';
+        });
+
+        // Функция обновления ID карты
+        function updateIdCard(meme, name, birthplace) {
+            // Основные данные
+            idName.textContent = name.toUpperCase();
+            idBirthplace.textContent = birthplace.toUpperCase();
+            
+            // Форматирование даты рождения
+
+            
+            // Дата выдачи (сегодня)
+            const today = new Date();
+            idIssued.textContent = today.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+            
+            // Дата истечения (через 5 лет)
+            const expiresDate = new Date(today);
+            expiresDate.setFullYear(today.getFullYear() + 5);
+            idExpires.textContent = expiresDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+            
+            // Номер
+            const randomId = 'TR' + Math.floor(100000 + Math.random() * 900000);
+            idNumber.textContent = `MEMES №: ${randomId}`;
+            
+            // Фото
+            idPhoto.innerHTML = `<img src="${meme.image}" alt="${meme.name}" style="width: 100%; height: 100%; object-fit: contain;">`;
+            idtype.textContent = meme.name;
+        }
+
+        // Новая карта
+        newBtn.addEventListener('click', function() {
+            idCard.classList.remove('active');
+            actionButtons.style.display = 'none';
+            mintBtn.style.display = 'block';
+            usernameInput.value = '';
+            birthplaceInput.value = '';
+        });
+
+        // Сохранение карты
+        saveBtn.addEventListener('click', function() {
+            // alert('ID CARD SAVED TO YOUR DEVICE!');
+        });
+
+        // Показать все ID карты
+        showAllBtn.addEventListener('click', function() {
+            mainPage.classList.remove('active');
+            document.querySelector("body").style.background = "#fff";
+            allLicensesSection.classList.add('active');
+            showAllBtn.style.display = 'none';
+            backBtn.style.display = 'block';
+            
+            // Заполняем раздел ID картами
+            allLicensesSection.innerHTML = '';
+            const selectedMemes = getRandomMemes(4);
+            
+            
+        });
+
+        // Назад к главной
+        backBtn.addEventListener('click', function() {
+            mainPage.classList.add('active');
+            allLicensesSection.classList.remove('active');
+            showAllBtn.style.display = 'block';
+            document.querySelector("body").style.backgroundImage = "url(./BACK.jpg)";
+            document.querySelector("body").style.backgroundRepeat = 'no-repeat';
+            document.querySelector("body").style.backgroundSize = 'cover';
+            backBtn.style.display = 'none';
+        });
+
+        // Открыть модальное окно
+        function openModal(meme, name, birthplace, issued, expires, trollNumber) {
+            modalContent.innerHTML = `
+                <div class="id-card">
+                    <div class="id-header">
+                        Memes 2.0 Citizenship
+                    </div>
+                    <div class="id-body">
+                        <div class="id-photo">
+                            <img src="${meme.image}" alt="${meme.name}" style="width: 100%; height: 100%; object-fit: contain;">
+                        </div>
+                        <div class="id-info">
+                            <div class="id-row">
+                                <div class="id-label">NAME:</div>
+                                <div class="id-value">${name}</div>
+                            </div>
+                            <div class="id-row">
+                                <div class="id-label">ISSUED:</div>
+                                <div class="id-value">${issued.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                            </div>
+                            <div class="id-row">
+                                <div class="id-label">EXPIRES ON:</div>
+                                <div class="id-value">${expires.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                            </div>
+                            <div class="id-row">
+                                <div class="id-label">BIRTHPLACE:</div>
+                                <div class="id-value">${birthplace}</div>
+                            </div>
+                        </div>
+                        <div class="watermark">MEMES</div>
+                    </div>
+                    <div class="id-number">
+                        MEMES №: ${trollNumber}
+                    </div>
+                    <div class="id-footer">
+                        OFFICIAL MEMES CERTIFICATION © MEME INC.
+                    </div>
+                </div>
+            `;
+            modal.classList.add('active');
+        }
+
+        // Закрыть модальное окно
+        closeModal.addEventListener('click', function() {
+            modal.classList.remove('active');
+        });
+
+        // Закрыть по клику вне окна
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
+
+        // Получить случайные мемы
+        function getRandomMemes(count) {
+            const shuffled = [...memeTypes].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
+        }
+
+        // Создать демо-карты при загрузке
+        window.addEventListener('load', () => {
+            // Создаем 4 демо-ID карты при загрузке
+            document.getElementById('show-all-btn').click();
+            document.getElementById('back-btn').click();
+        });
+
+          // Данные для стикеров
+          const stickerImages = [
+            '1.webp',
+            '3.webp',
+            '4.webp',
+            '5.jpg',
+            '7.webp',
+            '8.jpg',
+            '9.webp'
+        ];
+
+        // Функция создания стикеров
+        function createMemeStickers(count) {
+            for (let i = 0; i < count; i++) {
+                const sticker = document.createElement('img');
+                sticker.classList.add('meme-sticker');
+                
+                // Случайные параметры
+                const size = Math.random() * 100 + 50;
+                const posX = Math.random() * window.innerWidth;
+                const posY = Math.random() * window.innerHeight;
+                const duration = Math.random() * 20 + 10;
+                const delay = Math.random() * 5;
+                const stickerUrl = stickerImages[Math.floor(Math.random() * stickerImages.length)];
+                
+                // Применение стилей
+                sticker.src = stickerUrl;
+                sticker.style.width = `${size}px`;
+                sticker.style.height = `${size}px`;
+                sticker.style.left = `${posX}px`;
+                sticker.style.top = `${posY}px`;
+                sticker.style.animationDuration = `${duration}s`;
+                sticker.style.animationDelay = `${delay}s`;
+                
+                // Добавление на страницу
+                document.body.appendChild(sticker);
+            }
+        }
+
+        // Создаем стикеры при загрузке
+        window.addEventListener('load', () => {
+            // createMemeStickers(25); // 8 стикеров на фоне
+            
+            // Остальной код инициализации...
+            document.getElementById('show-all-btn').click();
+            document.getElementById('back-btn').click();
+        });
+
+        // Функция для сохранения данных в куки
+function saveToCookies() {
+    const name = idName.textContent;
+    const birthplace = idBirthplace.textContent;
+    const memeType = idtype.textContent;
+    const memeImage = idPhoto.querySelector('img').src;
+    const issuedDate = new Date();
+    const expiresDate = new Date();
+    expiresDate.setFullYear(issuedDate.getFullYear() + 5);
+    const idNum = idNumber.textContent.replace('MEMES №: ', '');
+    const watermark = idwatermark.textContent;
+
+    // Получаем текущие сохранённые лицензии
+    let licenses = getAllLicensesFromCookies();
+    
+    // Добавляем новую лицензию
+    const newLicense = {
+        name: name,
+        birthplace: birthplace,
+        memeType: memeType,
+        memeImage: memeImage,
+        issuedDate: issuedDate.toISOString(),
+        expiresDate: expiresDate.toISOString(),
+        idNumber: idNum,
+        watermark: watermark
+    };
+    
+    licenses.push(newLicense);
+    
+    // Сохраняем обновлённый список лицензий в куки на 30 дней
+    const expirationDate = new Date();
+    expirationDate.setDate(expirationDate.getDate() + 30);
+    document.cookie = `memeLicenses=${JSON.stringify(licenses)}; expires=${expirationDate.toUTCString()}; path=/`;
+}
+
+// Функция для получения всех лицензий из куки
+function getAllLicensesFromCookies() {
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+        cookie = cookie.trim();
+        if (cookie.startsWith('memeLicenses=')) {
+            const cookieValue = cookie.substring('memeLicenses='.length);
+            try {
+                return JSON.parse(cookieValue) || [];
+            } catch (e) {
+                console.error('Error parsing cookie data', e);
+            }
+        }
+    }
+    return [];
+}
+
+// Функция для отображения всех лицензий в разделе All ID Cards
+function displayAllLicenses() {
+    console.log(1);
+    const allLicensesSection = document.getElementById('all-licenses');
+    allLicensesSection.innerHTML = '';
+    
+    const licenses = getAllLicensesFromCookies();
+    
+    if (licenses.length === 0) {
+        allLicensesSection.innerHTML = '<p style="color: #000; font-size: 1.5rem; text-align: center; width: 100%;">NO SAVED LICENSES YET</p>';
+        return;
+    }
+    
+    licenses.forEach((license, index) => {
+
+        const licenseCard = document.createElement('div');
+        licenseCard.className = 'id-card';
+        licenseCard.style.margin = '20px';
+        licenseCard.style.width = '450px';
+        licenseCard.innerHTML = `
+            <div class="id-header">
+                Memes 2.0 Citizenship
+            </div>
+            <div class="id-body">
+                <div class="id-photo">
+                    <img src="${license.memeImage}" alt="${license.memeType}" style="width: 100%; height: 100%; object-fit: contain;">
+                </div>
+                <div class="id-info">
+                    <div class="id-row">
+                        <div class="id-label">NAME:</div>
+                        <div class="id-value">${license.name}</div>
+                    </div>
+                    <div class="id-row">
+                        <div class="id-label">TYPE:</div>
+                        <div class="id-value">${license.memeType}</div>
+                    </div>
+                    <div class="id-row">
+                        <div class="id-label">ISSUED:</div>
+                        <div class="id-value">${new Date(license.issuedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                    </div>
+                    <div class="id-row">
+                        <div class="id-label">EXPIRES ON:</div>
+                        <div class="id-value">${new Date(license.expiresDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                    </div>
+                    <div class="id-row">
+                        <div class="id-label">BIRTHPLACE:</div>
+                        <div class="id-value">${license.birthplace}</div>
+                    </div>
+                </div>
+                <div class="watermark">${license.watermark}</div>
+            </div>
+            <div class="id-number">
+                MEMES №: ${license.idNumber}
+            </div>
+            <div class="id-footer">
+                OFFICIAL MEMES CERTIFICATION © MEME INC.
+            </div>
+        `;
+        
+        allLicensesSection.appendChild(licenseCard);
+        console.log(allLicensesSection);
+    });
+}
+
+// Обновлённый обработчик кнопки Save
+saveBtn.addEventListener('click', function() {
+    saveToCookies();
+   
+});
+
+// Обновлённый обработчик кнопки Show All
+showAllBtn.addEventListener('click', function() {
+    mainPage.classList.remove('active');
+    document.querySelector("body").style.background = "#f0f0f0";
+    allLicensesSection.classList.add('active');
+    showAllBtn.style.display = 'none';
+    backBtn.style.display = 'block';
+    
+    // Отображаем все сохранённые лицензии
+    displayAllLicenses();
+});
+
+// Обновлённый обработчик кнопки New
+newBtn.addEventListener('click', function() {
+    idCard.classList.remove('active');
+    actionButtons.style.display = 'none';
+    mintBtn.style.display = 'block';
+    usernameInput.value = '';
+    birthplaceInput.value = '';
+});
+
+// Инициализация при загрузке страницы
+window.addEventListener('load', function() {
+    // Проверяем и отображаем сохранённые лицензии при необходимости
+    if (window.location.hash === '#all-licenses') {
+        showAllBtn.click();
+    }
+    
+    // Остальной код инициализации...
+    document.getElementById('show-all-btn').click();
+    document.getElementById('back-btn').click();
+});
+
+function shareOnTwitter() {
+    console.log(idtype.textContent);
+    const name = idName.textContent;
+    const memeType = idtype.textContent;
+    const idNum = idNumber.textContent.replace('MEMES №: ', '');
+    
+    // Создаем текст для твита
+    const tweetText = `Just got my official Memes 2.0 Citizenship! \n I am  ${name} \nLicense №: ${idNum}\n type: ${memeType}\n\nGenerate yours at: ${window.location.href}`;
+    
+    // Создаем URL для твиттера
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
+    
+    // Открываем в новом окне
+    window.open(twitterUrl, '_blank', 'width=550,height=420');
+}
+
+// // Обновляем обработчик кнопки Share on X
+// document.querySelector('.btn[onclick^="shareTrollCard"]').addEventListener('click', function(e) {
+//     e.preventDefault();
+//     shareOnTwitter();
+// });
+
+// Обновляем HTML кнопки (удаляем старый onclick)
+const shareBtn = document.querySelector('.btn[onclick^="shareTrollCard"]');
+// shareBtn.removeAttribute('onclick');
+// shareBtn.innerHTML = `
+//     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+//         <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75zm-.86 13.028h1.36L4.323 2.145H2.865l8.875 11.633z"/>
+//     </svg>
+//     Share on X
+// `;
+
+// Добавляем возможность делиться из раздела All Licenses
+function addShareButtonsToAllLicenses() {
+    const licenses = getAllLicensesFromCookies();
+    const licenseCards = document.querySelectorAll('#all-licenses .id-card');
+    
+    licenseCards.forEach((card, index) => {
+        const shareBtn = document.createElement('button');
+        shareBtn.className = 'btn';
+        shareBtn.style.marginTop = '10px';
+        shareBtn.style.width = '100%';
+        shareBtn.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75zm-.86 13.028h1.36L4.323 2.145H2.865l8.875 11.633z"/>
+            </svg>
+            Share on X
+        `;
+        
+        shareBtn.addEventListener('click', () => {
+            const license = licenses[index];
+            const tweetText = `Just got my official Memes 2.0 Citizenship! \n I am  ${name} \nLicense №: ${idNum}\n type: ${memeType}\n\nGenerate yours at: ${window.location.href}`;
+            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`, '_blank', 'width=550,height=420');
+        });
+        
+        card.appendChild(shareBtn);
+    });
+}
+
+// Обновляем функцию displayAllLicenses чтобы добавить кнопки Share
+function displayAllLicenses() {
+    const allLicensesSection = document.getElementById('all-licenses');
+    allLicensesSection.innerHTML = '';
+    
+    const licenses = getAllLicensesFromCookies();
+    
+    if (licenses.length === 0) {
+        allLicensesSection.innerHTML = '<p style="color: #000; font-size: 1.5rem; text-align: center; width: 100%;">NO SAVED LICENSES YET</p>';
+        return;
+    }
+    
+    licenses.forEach((license, index) => {
+        const licenseCard = document.createElement('div');
+        licenseCard.className = 'id-card';
+        licenseCard.style.margin = '20px';
+        licenseCard.style.width = '450px';
+        licenseCard.innerHTML = `
+            <div class="id-header">
+                Memes 2.0 Citizenship
+            </div>
+            <div class="id-body">
+                <div class="id-photo">
+                    <img src="${license.memeImage}" alt="${license.memeType}" style="width: 100%; height: 100%; object-fit: contain;">
+                </div>
+                <div class="id-info">
+                    <div class="id-row">
+                        <div class="id-label">NAME:</div>
+                        <div class="id-value">${license.name}</div>
+                    </div>
+                    <div class="id-row">
+                        <div class="id-label">TYPE:</div>
+                        <div class="id-value">${license.memeType}</div>
+                    </div>
+                    <div class="id-row">
+                        <div class="id-label">ISSUED:</div>
+                        <div class="id-value">${new Date(license.issuedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                    </div>
+                    <div class="id-row">
+                        <div class="id-label">EXPIRES ON:</div>
+                        <div class="id-value">${new Date(license.expiresDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                    </div>
+                    <div class="id-row">
+                        <div class="id-label">BIRTHPLACE:</div>
+                        <div class="id-value">${license.birthplace}</div>
+                    </div>
+                </div>
+                <div class="watermark">${license.watermark}</div>
+            </div>
+            <div class="id-number">
+                MEMES №: ${license.idNumber}
+            </div>
+            <div class="id-footer">
+                OFFICIAL MEMES CERTIFICATION © MEME INC.
+            </div>
+        `;
+        
+        // Добавляем кнопку Share
+        const shareBtn = document.createElement('button');
+        shareBtn.className = 'btn';
+        shareBtn.style.margin = '10px auto';
+        shareBtn.style.display = 'block';
+        shareBtn.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75zm-.86 13.028h1.36L4.323 2.145H2.865l8.875 11.633z"/>
+            </svg>
+            Share on X
+        `;
+        
+        shareBtn.addEventListener('click', () => {
+            const tweetText = `Check out my ${license.memeType} license! 🎭\nName: ${license.name}\nLicense №: ${license.idNumber}\n\nGenerate yours at: ${window.location.href}`;
+            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`, '_blank', 'width=550,height=420');
+        });
+        
+        licenseCard.appendChild(shareBtn);
+        allLicensesSection.appendChild(licenseCard);
+    });
+}
+
+// Download ID Card
+document.getElementById("save-btn").addEventListener('click', async function() {
+    // Get the original ID card element
+    const originalIdCard = document.querySelector('.id-card.active') || document.querySelector('.id-card');
+    
+    if (!originalIdCard) {
+        alert('No license card found!');
+        return;
+    }
+
+    // Create a container for the copy (hidden)
+    const downloadContainer = document.createElement('div');
+    downloadContainer.style.position = 'fixed';
+    downloadContainer.style.left = '-9999px';
+    downloadContainer.style.top = '0';
+    downloadContainer.style.width = originalIdCard.offsetWidth + 'px';
+    downloadContainer.style.height = originalIdCard.offsetHeight + 'px';
+    
+    // Create a copy of the ID card
+    const idCardCopy = originalIdCard.cloneNode(true);
+    idCardCopy.style.transform = 'none';
+    idCardCopy.style.opacity = '1';
+    idCardCopy.style.position = 'relative';
+    idCardCopy.style.left = '0';
+    idCardCopy.style.top = '0';
+    
+    // Add the copy to our hidden container
+    downloadContainer.appendChild(idCardCopy);
+    document.body.appendChild(downloadContainer);
+
+    try {
+        // Use html2canvas to create screenshot
+        const canvas = await html2canvas(idCardCopy, {
+            scale: 2, // Higher quality
+            logging: false,
+            useCORS: true, // For external images
+            allowTaint: true,
+            backgroundColor: null, // Transparent background
+            width: originalIdCard.offsetWidth,
+            height: originalIdCard.offsetHeight
+        });
+        
+        // Create download link
+        const link = document.createElement('a');
+        link.download = 'meme-license.png';
+        link.href = canvas.toDataURL('image/png');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+    } catch (error) {
+        console.error('Error generating license image:', error);
+        alert('Error generating license. Please try again.');
+    } finally {
+        // Clean up
+        document.body.removeChild(downloadContainer);
+    }
+});
+    </script>
+
+
+
+</body></html>
